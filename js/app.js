@@ -143,7 +143,7 @@ window.addEventListener("keydown", (e) => {
 		let scalex = (x_max_value - x_min_value) * 0.8;
 		let scaley = (y_max_value - y_min_value) * 0.8;
 
-		moveDelta *= 0.8;
+		moveDelta *= 0.6;
 
 		let temp_x = x_max_value;
 		let temp_y = y_max_value;
@@ -157,7 +157,7 @@ window.addEventListener("keydown", (e) => {
 		let scalex = (x_max_value - x_min_value) * 1.2;
 		let scaley = (y_max_value - y_min_value) * 1.2;
 
-		moveDelta *= 1.2;
+		moveDelta *= 1.4;
 
 		let temp_x = x_max_value;
 		let temp_y = y_max_value;
