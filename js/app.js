@@ -55,10 +55,12 @@ gl.shaderSource(
     uniform float uTime;
 
     void main(){
-        if(length(gl_FragCoord.xy - uMouse) < sin(2.0*uTime)*sin(gl_FragCoord.x/7.0)*cos(gl_FragCoord.y/7.0)*250.0){
-            gl_FragColor = vec4(0.9, 0.1, 0.1,1);
+        float d = length(gl_FragCoord.xy - uMouse);
+        float r = 500.0;
+        if(d < r){
+            gl_FragColor = vec4(d*vec3(1, 1, 1)/r, 0.0);
         }else{
-            gl_FragColor = vec4(0, 0, 0, 0);
+            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
         }
     }
 `
