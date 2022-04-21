@@ -187,20 +187,34 @@ window.addEventListener("keyup", (e) => (keys[e.key] = false));
 var speed = 0.025;
 var frameTime = Date.now();
 
+setInterval(() => {
+	let collision = document.getElementById("collision");
+	let distance = Math.sqrt(
+		Math.pow(pos.x, 2) + Math.pow(pos.y, 2) + Math.pow(pos.z + 1, 2)
+	);
+	console.log(distance);
+
+	if (distance < 1.5) {
+		collision.style.display = "flex";
+	} else {
+		collision.style.display = "none";
+	}
+}, 0);
+
 var renderLoop = setInterval(() => {
 	let deltaTime = Date.now() - frameTime;
 	frameTime = Date.now();
 	if (keys["w"]) {
-		pos.z += deltaTime * speed;
+		pos.z += (deltaTime * speed) / 4;
 	}
 	if (keys["s"]) {
-		pos.z -= deltaTime * speed;
+		pos.z -= (deltaTime * speed) / 4;
 	}
 	if (keys["d"]) {
-		pos.x += deltaTime * speed;
+		pos.x += (deltaTime * speed) / 4;
 	}
 	if (keys["a"]) {
-		pos.x -= deltaTime * speed;
+		pos.x -= (deltaTime * speed) / 4;
 	}
 	if (keys["q"]) {
 		pos.y -= (deltaTime * speed) / 4;
