@@ -1,6 +1,6 @@
 var canvas = document.getElementById("canvas");
-canvas.height = 3000;
-canvas.width = 3000;
+canvas.height = 5000;
+canvas.width = 5000;
 var gl = canvas.getContext("webgl");
 canvas.height = 1000;
 canvas.width = 1000;
@@ -61,13 +61,13 @@ gl.shaderSource(
         float x = 0.0;
         float y = 0.0;
         int found = 0;
-        const int max_iteration = 100;
+        const int max_iteration = 300;
         for(int k = 0; k < max_iteration; k++){
             float x_new = x*x - y*y + x0;
             float y_new = 2.0*x*y + y0;
             if(x_new*x_new + y_new*y_new > 4.0){
                 found = 1;
-                gl_FragColor = vec4(k, k, 0.1, 100)/100.0;
+                gl_FragColor = vec4(k > 100? k > 200? k - 100 : k: 0, k > 200? k - 200: 0,k > 100? k > 200? (k - 200) : (k - 100): k, 100)/50.0;
                 break;
             }
             x = x_new;
