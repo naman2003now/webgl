@@ -65,10 +65,10 @@ gl.shaderSource(
 	}
 
 	float distance_from_sphere(vec3 _coordinates, vec3 _origin, float _radius){
-		vec3 point_on_sphere = normalize(_coordinates-uSpherePos);
-		float bumps = sin(asin(point_on_sphere.y)*25.0 ) + cos(acos(point_on_sphere.x)*25.0 );
-		bumps/=uBumps;
-		return length(_coordinates - _origin) - _radius - bumps;
+		// vec3 point_on_sphere = normalize(_coordinates-uSpherePos);
+		// float bumps = sin(asin(point_on_sphere.y)*25.0 ) + cos(acos(point_on_sphere.x)*25.0 );
+		// bumps/=uBumps;
+		return length(_coordinates - _origin) - _radius;
 	}
 
 	float minimum_distance(vec3 _coordinates){
@@ -175,15 +175,39 @@ gl.uniform2f(uResolution, canvas.width, canvas.height);
 gl.uniform3f(uSpherePos, 0, 0, 3);
 gl.uniform4f(uCamera, 0, 0, -1, 0);
 gl.uniform3f(uLightDirection, 1, 1, 0);
-gl.uniform1f(uBumps, 50.0);
+gl.uniform1f(uBumps, 1050.0);
+
+pos = { x: 0, y: 0, z: 3 };
+
+keys = {};
+
+window.addEventListener("keydown", (e) => (keys[e.key] = true));
+window.addEventListener("keyup", (e) => (keys[e.key] = false));
+
+var speed = 0.025;
+var frameTime = Date.now();
 
 var renderLoop = setInterval(() => {
-	gl.uniform3f(
-		uLightDirection,
-		Math.sin(Date.now() / 1000),
-		3,
-		Math.cos(Date.now() / 1000)
-	);
-	gl.uniform1f(uBumps, 180 - Math.sin(Date.now() / 2000) * 150);
+	let deltaTime = Date.now() - frameTime;
+	frameTime = Date.now();
+	if (keys["w"]) {
+		pos.z += deltaTime * speed;
+	}
+	if (keys["s"]) {
+		pos.z -= deltaTime * speed;
+	}
+	if (keys["d"]) {
+		pos.x += deltaTime * speed;
+	}
+	if (keys["a"]) {
+		pos.x -= deltaTime * speed;
+	}
+	if (keys["q"]) {
+		pos.y -= (deltaTime * speed) / 4;
+	}
+	if (keys["e"]) {
+		pos.y += (deltaTime * speed) / 4;
+	}
+	gl.uniform3f(uSpherePos, pos.x, pos.y, pos.z);
 	gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 }, 1000 / 60);
