@@ -199,7 +199,7 @@ setInterval(() => {
 	gl.uniform3f(
 		uLightDirection,
 		Math.sin(Date.now() / 4000),
-		3,
+		1,
 		Math.cos(Date.now() / 4000)
 	);
 
