@@ -55,9 +55,10 @@ gl.shaderSource(
 	uniform vec3 uLightDirection;
 
 	uniform float uBumps;
+	uniform float uPhase;
 
 	const int MAX_ITER = 1000;
-	const float HIT_SIZE = 0.0001;
+	const float HIT_SIZE = 0.001;
 	const float MAX_DISTANCE = 10.0;
 
 	float distance_from_plane(vec3 _coordinates){
@@ -65,10 +66,10 @@ gl.shaderSource(
 	}
 
 	float distance_from_sphere(vec3 _coordinates, vec3 _origin, float _radius){
-		// vec3 point_on_sphere = normalize(_coordinates-uSpherePos);
-		// float bumps = sin(asin(point_on_sphere.y)*25.0 ) + cos(acos(point_on_sphere.x)*25.0 );
-		// bumps/=uBumps;
-		return length(_coordinates - _origin) - _radius;
+		vec3 point_on_sphere = normalize(_coordinates-uSpherePos);
+		float bumps = sin(asin(point_on_sphere.y)*25.0 ) + cos(acos(point_on_sphere.x)*25.0 + uPhase);
+		bumps/=uBumps;
+		return length(_coordinates - _origin) - _radius - bumps;
 	}
 
 	float minimum_distance(vec3 _coordinates){
@@ -168,6 +169,7 @@ const uRadius = gl.getUniformLocation(program, "uRadius");
 const uCamera = gl.getUniformLocation(program, "uCamera");
 const uLightDirection = gl.getUniformLocation(program, "uLightDirection");
 const uBumps = gl.getUniformLocation(program, "uBumps");
+const uPhase = gl.getUniformLocation(program, "uPhase");
 
 //Setting Uniform Locations
 gl.uniform1f(uRadius, 0.85);
@@ -175,7 +177,8 @@ gl.uniform2f(uResolution, canvas.width, canvas.height);
 gl.uniform3f(uSpherePos, 0, 0, 3);
 gl.uniform4f(uCamera, 0, 0, -1, 0);
 gl.uniform3f(uLightDirection, 1, 1, 0);
-gl.uniform1f(uBumps, 1050.0);
+gl.uniform1f(uBumps, 60.0);
+gl.uniform1f(uPhase, 0);
 
 pos = { x: 0, y: 0, z: 3 };
 
@@ -192,7 +195,13 @@ setInterval(() => {
 	let distance = Math.sqrt(
 		Math.pow(pos.x, 2) + Math.pow(pos.y, 2) + Math.pow(pos.z + 1, 2)
 	);
-	console.log(distance);
+
+	gl.uniform3f(
+		uLightDirection,
+		Math.sin(Date.now() / 4000),
+		3,
+		Math.cos(Date.now() / 4000)
+	);
 
 	if (distance < 1.5) {
 		collision.style.display = "flex";
@@ -200,6 +209,8 @@ setInterval(() => {
 		collision.style.display = "none";
 	}
 }, 0);
+
+startTime = Date.now();
 
 var renderLoop = setInterval(() => {
 	let deltaTime = Date.now() - frameTime;
@@ -222,6 +233,7 @@ var renderLoop = setInterval(() => {
 	if (keys["e"]) {
 		pos.y += (deltaTime * speed) / 4;
 	}
+	gl.uniform1f(uPhase, (Date.now() - startTime) / 250);
 	gl.uniform3f(uSpherePos, pos.x, pos.y, pos.z);
 	gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 }, 1000 / 60);
