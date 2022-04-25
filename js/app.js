@@ -180,4 +180,4 @@ var renderLoop = setInterval(() => {
 	gl.uniform1f(y_min, y_min_value);
 	gl.uniform1f(y_max, y_max_value);
 	gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
-}, 1000 / 60);
+}, 0);
